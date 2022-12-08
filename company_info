@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+
+# Company Info, Tools for using the Companies House API, by Martin Keegan
+#
+# To the extent (if any) permissible by law, Copyright (C) 2022  Martin Keegan
+#
+# This programme is free software; you may redistribute and/or modify it under
+# the terms of the Apache Software Licence v2.0.
+
+import logging
+import argparse
+import json
+import csv
+import sys
+import os
+
+from delayed_client import DelayedClient
+from rtmco import valid_rtms
+
+host = "api.company-information.service.gov.uk"
+
+def default_credentials():
+    return os.environ.get("API_KEY", None)
+
+def get_filings(args):
+    dc = DelayedClient(args.api_key)
+
+    url = f"https://{host}/company/{args.regno}/filing-history"
+    resp = dc.get(url) # may require second arg, {}
+
+    filings = resp.json()["items"]
+    for filing in filings:
+        print(json.dumps(filing, indent=2))
+
+def tuples_to_csv(generator):
+    w = csv.writer(sys.stdout)
+    for tupe in generator:
+        w.writerow(tupe)
+
+def rtms_to_csv(args):
+    tuples_to_csv(valid_rtms(args))
+
+def main(args):
+    rtms_to_csv(args)
+
+def run():
+    parser = argparse.ArgumentParser()
+    # TODO help docs
+    parser.add_argument('--regno', type=int, required=False,
+                        help="Company registration number")
+    parser.add_argument('--start-index', type=int, required=False)
+    parser.add_argument('--debug', action='store_true', required=False,
+                    help='set logging level to INFO')
+    parser.add_argument('--host', default=host, required=False)
+    parser.add_argument('--api-key', default=default_credentials())
+
+    args = parser.parse_args()
+
+    if args.debug:
+        logging.getLogger().setLevel(20)
+    assert args.api_key is not None
+
+    main(args)
+
+if __name__ == '__main__':
+    run()

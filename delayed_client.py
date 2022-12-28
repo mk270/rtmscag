@@ -1,3 +1,10 @@
+# Company Info, Tools for using the Companies House API, by Martin Keegan
+#
+# To the extent (if any) permissible by law, Copyright (C) 2022  Martin Keegan
+#
+# This programme is free software; you may redistribute and/or modify it under
+# the terms of the Apache Software Licence v2.0.
+
 import time
 import requests
 from requests.auth import HTTPBasicAuth

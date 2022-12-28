@@ -56,6 +56,7 @@ def valid_rtm_name(company_name):
 
 def standardise_name(company_name):
     name = company_name.replace("  ", " ")
+    name = name.replace(" LTD LTD", " LTD")
     name = name.replace(" LTD", " LIMITED")
     name = name.replace(" MANAGEMENT", "")
     name = name.replace("(", "")

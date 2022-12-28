@@ -52,14 +52,11 @@ def valid_rtm_name(company_name):
     return name_ok
 
 def standardise_name(company_name):
-    name = company_name.replace("  ", " ")
-    name = name.replace(" LTD LTD", " LTD")
-    name = name.replace(" LTD", " LIMITED")
-    name = name.replace(" MANAGEMENT", "")
-    name = name.replace("(", "")
-    name = name.replace(")", "")
-    name = name.replace(".", "")
-    name = name.replace('"', "")
+    name = company_name
+
+    for before, after in substitutions:
+        name = name.replace(before, after)
+
     return name
 
 def valid_postcode(company):
@@ -68,6 +65,20 @@ def valid_postcode(company):
     if "postal_code" not in company["registered_office_address"]:
         return False
     return True
+
+#############################################################################
+
+# (before, after)
+substitutions = [
+    ("  ", " "),
+    (" LTD LTD", " LTD"),
+    (" LTD", " LIMITED"),
+    (" MANAGEMENT", ""),
+    ("(", ""),
+    (")", ""),
+    (".", ""),
+    ('"', "")
+]
 
 # please excuse this rather hacky literal list
 suffixes = (

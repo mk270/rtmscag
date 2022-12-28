@@ -16,7 +16,6 @@ def valid_rtms(args):
     }
     start_index = args.start_index or 0
 
-    count = 0
     rtm_companies = dc.iter_results(url, common_params, start_index)
 
     for start_index, c in rtm_companies:
@@ -39,8 +38,6 @@ def valid_rtms(args):
             c["registered_office_address"]["postal_code"],
             c["company_name"]
         )
-
-        count += 1
 
 def valid_rtm_name(company_name):
     # remove punctuation (etc) from name

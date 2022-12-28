@@ -18,9 +18,9 @@ def valid_rtms(args):
 
     rtm_companies = dc.iter_results(url, common_params, start_index)
 
-    for start_index, c in rtm_companies:
-        status = c["company_status"]
-        company_name = c["company_name"]
+    for start_index, company in rtm_companies:
+        status = company["company_status"]
+        company_name = company["company_name"]
 
         # ensure we are only dealing with active companies
         if status not in ["active"]:
@@ -29,14 +29,14 @@ def valid_rtms(args):
         assert valid_rtm_name(company_name), company_name
 
         # check there's a valid postcode for the registered office
-        if not valid_postcode(c):
+        if not valid_postcode(company):
             continue
 
         yield (
-            c["company_number"],
-            c["date_of_creation"],
-            c["registered_office_address"]["postal_code"],
-            c["company_name"]
+            company["company_number"],
+            company["date_of_creation"],
+            company["registered_office_address"]["postal_code"],
+            company["company_name"]
         )
 
 def valid_rtm_name(company_name):

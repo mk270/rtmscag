@@ -9,14 +9,14 @@ from delayed_client import DelayedClient
 
 def valid_rtms(args):
     host = args.host
-    dc = DelayedClient(args.api_key)
+    client = DelayedClient(args.api_key)
     url = f"https://{host}/advanced-search/companies"
     common_params = {
             "company_name_includes": "RTM COMPANY"
     }
     start_index = args.start_index or 0
 
-    rtm_companies = dc.iter_results(url, common_params, start_index)
+    rtm_companies = client.iter_results(url, common_params, start_index)
 
     for start_index, company in rtm_companies:
         status = company["company_status"]

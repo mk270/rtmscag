@@ -8,6 +8,12 @@
 from delayed_client import DelayedClient
 
 def valid_rtms(args):
+    """Return a stream of tuples representing valid RTM companies.
+
+    The tuples are of the form:
+    (registration number, date of incorporation, postcode, company name)
+    """
+
     host = args.host
     client = DelayedClient(args.api_key)
     url = f"https://{host}/advanced-search/companies"
@@ -40,6 +46,11 @@ def valid_rtms(args):
         )
 
 def valid_rtm_name(company_name):
+    """Returns true if company_name, once normalised, is a reasonable
+    name for an RTM company.
+
+    The policy adopted is fairly permissive."""
+
     # remove punctuation (etc) from name
     name = standardise_name(company_name)
 
@@ -52,6 +63,11 @@ def valid_rtm_name(company_name):
     return name_ok
 
 def standardise_name(company_name):
+    """Return a modified version of company_name, replacing some
+    material with synonyms and omitting some punctuation.
+
+    See the end of this source file for a list of the textual substitutions
+    applied."""
     name = company_name
 
     for before, after in substitutions:
@@ -60,6 +76,14 @@ def standardise_name(company_name):
     return name
 
 def valid_postcode(company):
+    """Return a boolean about whether the company data contains a
+       postcode member.  Does not care whether it's really a UK
+       postcode, only whether it is there.
+
+       Companies House occasionally fails to record postcodes from
+       the IN01 or similar documentation, and this is reflected in the
+       data that comes out of the API."""
+
     if "registered_office_address" not in company:
         return False
     if "postal_code" not in company["registered_office_address"]:

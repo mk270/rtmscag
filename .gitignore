@@ -1,0 +1,4 @@
+*.csv
+*.pdf
+*.sh
+__pycache__
